@@ -8,7 +8,7 @@ pipeline {
         appRegistry = "341324050589.dkr.ecr.eu-west-1.amazonaws.com/test_httpdapprepo"
         // ecrRegion = 'ecr:eu-west-1:'
         // registryCredential = 'ecr:eu-west-1:awscreds'
-        registryCredential = awscreds
+        registryCredential = "awscreds"
         dashRegistry = "https://341324050589.dkr.ecr.eu-west-1.amazonaws.com"
     }
     stages {
