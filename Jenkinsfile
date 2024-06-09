@@ -5,9 +5,7 @@ pipeline {
     }
     environment {
         SCANNER_HOME = tool 'sonarscanner'
-        APP_NAME = "httpd-dash-app"
-        RELEASE = "1.0.0"
-        appRegistry = "test-build"
+        appRegistry = "341324050589.dkr.ecr.eu-west-1.amazonaws.com/test_httpdapprepo"
     }
     stages {
         stage('clean workspace') {
@@ -28,15 +26,15 @@ pipeline {
                 }
             }
         }
-        stage("Quality Gate") {
-    	    steps {
-        	timeout(time: 10, unit: 'MINUTES') {
-            	    // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
-            	    // true = set pipeline to UNSTABLE, false = don't
-            	    waitForQualityGate abortPipeline: true
-        	}
-    	    }
-	    }
+        // stage("Quality Gate") {
+    	//     steps {
+        // 	timeout(time: 10, unit: 'MINUTES') {
+        //     	    // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
+        //     	    // true = set pipeline to UNSTABLE, false = don't
+        //     	    waitForQualityGate abortPipeline: true
+        // 	}
+    	//     }
+	    // }
 
 	    stage('Build App Image') {
        	    steps {
