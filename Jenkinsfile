@@ -6,6 +6,8 @@ pipeline {
     environment {
         SCANNER_HOME = tool 'sonarscanner'
         appRegistry = "341324050589.dkr.ecr.eu-west-1.amazonaws.com/test_httpdapprepo"
+        registryCredential = 'ecr:eu-west-1:awscreds'
+        dashRegistry = "https://341324050589.dkr.ecr.eu-west-1.amazonaws.com"
     }
     stages {
         stage('clean workspace') {
@@ -43,5 +45,16 @@ pipeline {
                 }
      	    }
     	}
+
+        stage('Upload App Image') {
+          steps{
+            script {
+              docker.withRegistry( dashRegistry, registryCredential ) {
+                dockerImage.push("$BUILD_NUMBER")
+                dockerImage.push('latest')
+              }
+            }
+          }
+        }
      }    
 }
