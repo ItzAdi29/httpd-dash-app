@@ -32,20 +32,9 @@
     "executionRoleArn": "arn:aws:iam::341324050589:role/test_execrole",
     "networkMode": "awsvpc",
     "volumes": [],
-    "status": "ACTIVE",
     "requiresCompatibilities": [
         "FARGATE"
     ],
     "cpu": "256",
-    "memory": "512",
-    "tags": [
-        {
-            "key": "Stage",
-            "value": "Test"
-        },
-        {
-            "key": "Name",
-            "value": "Test_EcsTd"
-        }
-    ]
+    "memory": "512"
 }
