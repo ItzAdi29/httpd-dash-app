@@ -7,7 +7,7 @@ pipeline {
     environment {
         SCANNER_HOME = tool 'sonarscanner'
         REGION = 'eu-west-1'
-        TASK_DEFINITION : 'test_ecstd'
+        TASK_DEF = 'test_ecstd'
         ECS_CLUSTER = 'test_ecsclu'
         ECS_SERVICE = 'test_ecsser'
         ECS_COUNT = '1'
@@ -21,11 +21,13 @@ pipeline {
                 cleanWs()
             }
         }
+
         stage('Checkout from Git') {
             steps {
                 git branch: 'develop', url: 'https://github.com/ItzAdi29/httpd-dash-app.git'
             }
         }
+
         stage("Sonarqube Analysis") {
             steps {
                 withSonarQubeEnv('SonarQube') {
@@ -34,6 +36,7 @@ pipeline {
                 }
             }
         }
+        
         // stage("Quality Gate") {
     	//     steps {
         // 	timeout(time: 10, unit: 'MINUTES') {
@@ -55,7 +58,7 @@ pipeline {
         stage('Upload App Image') {
           steps{
             script {
-              docker.withRegistry( dashRegistry, "ecr:\${REGION}:" + awsCredential ) {
+              docker.withRegistry( dashRegistry, "ecr:${REGION}:" + awsCredential ) {
                 dockerImage.push("$BUILD_NUMBER")
                 dockerImage.push('latest')
               }
@@ -65,13 +68,13 @@ pipeline {
         
         stage('Deploy') {
             steps{
-                withAWS(credentials: awsCredential, region: ${REGION}) {
+                withAWS(credentials: awsCredential, region: "${REGION}") {
                     script {
 			            sh """
                             aws ecs register-task-definition --cli-input-json file://task-definition.json --region=\${REGION}
-                            REVISION=`aws ecs describe-task-definition --task-definition \${TASK_DEFINITION} --region \${REGION} | jq .taskDefinition.revision`
+                            REVISION=`aws ecs describe-task-definition --task-definition \${TASK_DEF} --region \${REGION} | jq .taskDefinition.revision`
                             echo "Task Definition ARN: \${REVISION}"
-                            aws ecs update-service --cluster \${ECS_CLUSTER} --service \${ECS_SERVICE} --task-definition \${TASK_DEFINITION}:"\${REVISION}" --desired-count \${ECS_COUNT}
+                            aws ecs update-service --cluster \${ECS_CLUSTER} --service \${ECS_SERVICE} --task-definition \${TASK_DEF}:"\${REVISION}" --desired-count \${ECS_COUNT}
                             aws ecs wait services-stable --cluster \${ECS_CLUSTER} --services \${ECS_SERVICE}
                         """
                     }
