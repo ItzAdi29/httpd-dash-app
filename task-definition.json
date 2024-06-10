@@ -1,0 +1,51 @@
+{
+    "containerDefinitions": [
+        {
+            "name": "httpd-app",
+            "image": "341324050589.dkr.ecr.eu-west-1.amazonaws.com/test_httpdapprepo:latest",
+            "cpu": 256,
+            "memory": 512,
+            "portMappings": [
+                {
+                    "containerPort": 80,
+                    "hostPort": 80,
+                    "protocol": "tcp"
+                }
+            ],
+            "essential": true,
+            "environment": [],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "test_loggrp",
+                    "awslogs-region": "eu-west-1",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            },
+            "systemControls": []
+        }
+    ],
+    "family": "test_ecstd",
+    "taskRoleArn": "arn:aws:iam::341324050589:role/test_taskrole",
+    "executionRoleArn": "arn:aws:iam::341324050589:role/test_execrole",
+    "networkMode": "awsvpc",
+    "volumes": [],
+    "status": "ACTIVE",
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "256",
+    "memory": "512",
+    "tags": [
+        {
+            "key": "Stage",
+            "value": "Test"
+        },
+        {
+            "key": "Name",
+            "value": "Test_EcsTd"
+        }
+    ]
+}
